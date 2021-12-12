@@ -1,10 +1,10 @@
 from django import forms
 
-from school.models import ClassName
+from school.models import ClassName, MyUser
 
 class_names = ClassName.objects.values_list('class_name')
 
-GEEKS_CHOICES =(
+GEEKS_CHOICES = (
     ("1", "One"),
     ("2", "Two"),
     ("3", "Three"),
@@ -24,3 +24,9 @@ class Register(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
     conform_password = forms.CharField(widget=forms.PasswordInput)
     class_name = forms.ChoiceField(choices=GEEKS_CHOICES)
+
+
+class UpdateForm(forms.ModelForm):
+    class Meta:
+        model = MyUser
+        fields = ['first_name', 'last_name', 'phone', 'dob', 'status', 'image', 'password', 'class_name']

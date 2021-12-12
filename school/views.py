@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
-from .form import Register
+from .form import Register, UpdateForm
 from .models import MyUser, ClassName
 
 
@@ -33,11 +33,10 @@ def signup(request):
         dob = form.cleaned_data['dob']
         status = form.cleaned_data['status']
         email = form.cleaned_data['email']
-        image = request.FILES.get['image']
+        image = request.FILES['image']
         pass1 = form.cleaned_data['password']
         pass2 = form.cleaned_data['conform_password']
         class_name = form.cleaned_data['class_name']
-        print(class_name)
 
         if MyUser.objects.filter(email=email):
             messages.error(request, "Username already exist! Please try some other username.")
@@ -65,36 +64,19 @@ def signup(request):
     return render(request, "school/signup.html", {'form': form})
 
 
-# def activate(request,uidb64,token):
-#     try:
-#         uid = force_text(urlsafe_base64_decode(uidb64))
-#         myuser = User.objects.get(pk=uid)
-#     except (TypeError,ValueError,OverflowError,User.DoesNotExist):
-#         myuser = None
-#
-#     if myuser is not None and generate_token.check_token(myuser,token):
-#         myuser.is_active = True
-#         # user.profile.signup_confirmation = True
-#         myuser.save()
-#         login(request, myuser)
-#         messages.success(request, "Your Account has been activated!!")
-#         return redirect('signin')
-#     else:
-#         return render(request,'activation_failed.html')html
-
-
 def signin(request):
     if request.method == 'POST':
         username = request.POST['username']
         pass1 = request.POST['pass1']
         
-        user = authenticate(username=username, password=pass1)
+        user = authenticate(email=username, password=pass1)
         
         if user is not None:
             login(request, user)
-            fname = user.first_name
+            user = MyUser.objects.get(email=username)
+            update_form = UpdateForm()
             # messages.success(request, "Logged In Sucessfully!!")
-            return render(request, "school/index.html",{"fname":fname})
+            return render(request, "school/index.html", {"user": user, 'update_form': update_form})
         else:
             messages.error(request, "Bad Credentials!!")
             return redirect('home')
@@ -106,3 +88,19 @@ def signout(request):
     logout(request)
     messages.success(request, "Logged Out Successfully!!")
     return redirect('home')
+
+
+def update_form(request):
+
+    obj = MyUser.objects.get(email=request.user)
+    form = UpdateForm(request.POST or None, instance=obj)
+
+    if form.is_valid():
+        ob = form.save(commit=False)
+        obj.save()
+        context = {"form": form}
+        return render(request, "school/update.html", context)
+    else:
+        context = {"form": form, "error": "something went wrong"}
+        return render(request, "school/update.html", context)
+

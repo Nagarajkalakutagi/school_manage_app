@@ -17,7 +17,7 @@
     </div>
     {% endfor %}
     <h3>Create your account!</h3>
-    <form method="post" action="/signup">
+    <form method="post" action="/signup" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Sign Up</button>

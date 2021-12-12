@@ -17,13 +17,14 @@
     </div>
     {% endfor %}
 
-    <h3>Welcome to GeeksForGeeks!</h3>
+    <h3>Student Profile</h3>
 
 
     {% if user.is_authenticated %}
-    <h3>Hello {{first_name}}!</h3>
+    <h3>Hello {{user.first_name}}!</h3>
     <h4>You're successfully logged in.</h4>
-    <button type="submit"><a href="/signout">SignOut</a></button>
+    <button type="submit"><a href="/signout">SignOut</a></button>    <button type="submit"><a href="/update">udate</a></button>
+
     {% else %}
     <button type="submit"><a href="/class">Class</a></button>
     </br>
@@ -32,6 +33,7 @@
     <br/>
     <br/>
     <button type="submit"><a href="/signin">SignIn</a></button>
+
     {% endif %}
 </body>
 </html>
