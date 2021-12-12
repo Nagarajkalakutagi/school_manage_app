@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Class</title>
+</head>
+
+<body>
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <strong>Message:</strong> {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+
+    <h3>Add Class</h3>
+    <form method="post" action="/class">
+        {% csrf_token %}
+        <div class="container">
+            <label>Class </label>
+            <input type="text" name="class" placeholder="Enter Your First Name" Required>
+            </br></br>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
